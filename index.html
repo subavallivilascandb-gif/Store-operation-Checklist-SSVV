@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#5c0f0f" id="themeMeta">
+<title>Store Operation Checklist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<!-- Cambria is used first. Caladea (metric-compatible with Cambria) is the web fallback for phones/Macs without Cambria.
+     Cambria has no Tamil glyphs, so Tamil text falls back to Nirmala UI / Noto Sans Tamil. -->
+<link href="https://fonts.googleapis.com/css2?family=Caladea:wght@400;700&family=Noto+Sans+Tamil:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+:root{--navy:#5c0f0f;--tint:#f6ecec;--bg:#faf6ee;--line:#e9e2d0;--gold:#c8911a;--green:#1e8a3c;--red:#c0392b;--amber:#d97706;--mut:#6b7280;--ink:#1f2433;
+--font:Cambria,Caladea,'Nirmala UI','Noto Sans Tamil',Latha,Georgia,serif}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font-family:inherit}
+button{cursor:pointer}
+.top{position:sticky;top:0;z-index:20;background:#fff;border-top:5px solid var(--navy);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:8px 14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:9px;font-weight:700;color:var(--navy);font-size:16px;min-width:0}
+.brand img{width:34px;height:34px;border-radius:8px;object-fit:cover;flex:none}
+.brand span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:230px}
+.nav{display:flex;gap:6px;margin-left:8px}
+.nav button,.chip-btn{border:1px solid transparent;background:#f1ece0;color:#4b5563;border-radius:999px;padding:6px 14px;font-weight:700;font-size:13px}
+.nav button.on,.chip-btn.on{background:#fff;border-color:var(--navy);color:var(--navy)}
+.sp{flex:1}
+.top select,.sel{border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:#fff;font-size:13px}
+.lang{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.lang button{border:0;background:#fff;padding:6px 10px;font-weight:700;font-size:12px;color:#4b5563}
+.lang button.on{background:var(--navy);color:#fff}
+.who{font-size:12px;color:var(--mut)}
+.ghost{background:none;border:0;color:var(--navy);font-weight:700;font-size:13px}
+.dot{width:9px;height:9px;border-radius:50%;background:#9ca3af;display:inline-block}
+.dot.ok{background:var(--green)}.dot.syncing{background:var(--amber)}.dot.err{background:var(--red)}
+main{max-width:780px;margin:0 auto;padding:14px 14px 90px}
+.filters{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px}
+.filters input[type=date]{border:1px solid var(--line);border-radius:8px;padding:7px 8px;font-size:13px;background:#fff}
+.btn{background:var(--navy);color:#fff;border:0;border-radius:8px;padding:9px 16px;font-weight:700;font-size:13px;display:inline-block}
+.btn.gold{background:var(--gold)}
+.btn.out{background:#fff;color:var(--navy);border:1px solid var(--navy)}
+.btn.sm{padding:6px 12px;font-size:12px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.hero{border-radius:12px;padding:16px 18px;display:flex;gap:14px;align-items:center;border:1px solid}
+.hero .orb{width:44px;height:44px;border-radius:50%;border:3px solid #111;flex:none}
+.hero h2{margin:0;font-size:21px;font-weight:700}
+.hero p{margin:2px 0 0;font-size:13px;color:#555}
+.hero.bad{background:#fdeaea;border-color:#f1b9b9}.hero.bad h2{color:#c0392b}.hero.bad .orb{background:#e8142a}
+.hero.warn{background:#fff4e0;border-color:#f3d39a}.hero.warn h2{color:#b45309}.hero.warn .orb{background:#f59e0b}
+.hero.ok{background:#e8f6ec;border-color:#b6e2c2}.hero.ok h2{color:var(--green)}.hero.ok .orb{background:#22c55e}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;text-align:center;padding:12px 4px}
+.kpi b{display:block;font-size:29px;line-height:1.1}
+.kpi span{font-size:11px;letter-spacing:.06em;color:var(--mut)}
+.h{display:flex;align-items:center;gap:8px;margin:20px 0 10px;font-size:18px;font-weight:700;color:var(--navy)}
+.h .cnt{font-size:12px;background:#fde8e8;color:var(--red);border-radius:999px;padding:1px 9px}
+.h:after{content:"";flex:1;height:1px;background:var(--line)}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px}
+.pad{padding:14px}
+.srow{display:grid;grid-template-columns:28px 1fr 64px;gap:10px;align-items:center;padding:11px 12px;border-bottom:1px solid var(--line)}
+.srow:last-child{border-bottom:0}
+.num{width:28px;height:28px;border-radius:7px;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:700;flex:none}
+.sname{font-weight:700;font-size:14px;margin-bottom:5px;display:flex;justify-content:space-between;gap:8px}
+.sname small{font-weight:400;color:var(--mut)}
+.bar{height:10px;border-radius:6px;background:#ece6d6;display:flex;overflow:hidden}
+.bar i{display:block;height:100%}
+.bar .y{background:var(--green)}.bar .n{background:var(--red)}
+.score{text-align:right;font-weight:700;font-size:16px;color:var(--navy)}
+.score small{display:block;font-weight:400;font-size:11px;color:var(--mut)}
+.fail{padding:12px 14px;border-bottom:1px solid var(--line)}
+.fail:last-child{border-bottom:0}
+.fh{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+.chip{background:var(--tint);color:var(--navy);border-radius:6px;padding:2px 8px;font-size:11px;font-weight:700}
+.meta{font-size:11px;color:var(--mut)}
+.fr{margin-top:6px;background:#fdf3f3;border-left:3px solid var(--red);padding:6px 9px;border-radius:4px;font-size:13px}
+.empty{padding:22px;text-align:center;color:var(--mut)}
+.prog{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:10px}
+.prog .row{display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:6px}
+.pbar{height:8px;background:#ece6d6;border-radius:6px;overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--gold);width:0;transition:width .25s}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:12px}
+.tabs button{border:0;background:#fff;padding:12px;font-weight:700;font-size:14px;color:var(--mut);border-bottom:3px solid transparent}
+.tabs button.on{color:var(--navy);border-bottom-color:var(--gold)}
+.tabs .c{font-size:11px;background:var(--tint);color:var(--navy);padding:1px 8px;border-radius:999px;margin-left:6px}
+.sec{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.sech{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer}
+.sech .t{font-weight:700;color:var(--navy);font-size:16px;flex:1}
+.pill{font-size:11px;font-weight:700;border-radius:999px;padding:2px 10px;background:#fdf0c9;color:#8a5a00;white-space:nowrap}
+.pill.g{background:#e3f4e8;color:var(--green)}
+.secb{padding:0 12px 12px}
+.task{background:#fcfaf4;border:1px solid var(--line);border-radius:10px;padding:11px 12px;margin-top:9px}
+.tq{font-size:15px;margin-bottom:9px}
+.badge{display:inline-block;font-size:10px;font-weight:700;background:var(--tint);color:var(--navy);border-radius:5px;padding:1px 7px;margin-left:6px;vertical-align:middle}
+.yn{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.yn button{background:#fff;border:1px solid var(--line);border-radius:9px;padding:11px;font-weight:700;font-size:15px;color:#555}
+.yn button.on.yes{background:var(--green);border-color:var(--green);color:#fff}
+.yn button.on.no{background:var(--red);border-color:var(--red);color:#fff}
+.yn button[disabled]{opacity:.7;cursor:default}
+.rem{margin-top:8px;width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px;resize:vertical;min-height:40px;background:#fff}
+.rem.req{border-color:var(--red);background:#fff8f8}
+.addrem{background:none;border:0;color:var(--navy);font-size:12px;font-weight:700;margin-top:6px;padding:0}
+.tmeta{font-size:11px;color:var(--mut);margin-top:6px}
+.sub{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;background:#f7f2e4;border-top:1px solid var(--line)}
+.sub span{font-size:12px;color:var(--mut)}
+.banner{background:#e8f6ec;border:1px solid #b6e2c2;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;font-weight:700;color:var(--green)}
+.login{max-width:390px;margin:7vh auto;background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px;text-align:center}
+.login .lg{width:84px;height:84px;border-radius:16px;object-fit:cover;margin:6px auto 8px;display:block}
+.login h1{color:var(--navy);font-size:23px;margin:4px 0 2px}
+.login p{color:var(--mut);margin:0 0 12px;font-size:14px}
+.login .f{text-align:left}
+.login label,.fld label{display:block;font-size:12px;font-weight:700;margin:11px 0 4px}
+.login input,.fld input,.fld select,.fld textarea{width:100%;border:1px solid var(--line);border-radius:9px;padding:10px;font-size:15px;background:#fff}
+.login .btn{width:100%;margin-top:16px;padding:12px;font-size:16px}
+.login .lg2{height:38px;margin-top:16px;opacity:.9}
+.err{color:var(--red);font-size:13px;margin-top:10px;min-height:18px}
+.hint{font-size:11px;color:var(--mut);margin-top:12px}
+.fld small{color:var(--mut);font-size:11px;display:block;margin-top:3px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.logoBox{display:flex;gap:14px;align-items:center;border:1px dashed #cfc6ad;border-radius:12px;padding:12px;margin-top:6px}
+.logoBox img{width:72px;height:72px;object-fit:contain;border-radius:10px;background:#fff;border:1px solid var(--line)}
+.logoBox .acts{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.srow2{display:grid;grid-template-columns:110px 1fr 34px;gap:8px;margin-top:8px}
+.srow2 input{padding:8px 10px}
+.srow2 button{border:1px solid var(--line);background:#fff;border-radius:8px;color:var(--red);font-weight:700}
+.sw{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
+.sw button{width:30px;height:30px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px var(--line)}
+.stick{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg) 30%);padding:18px 0 10px;display:flex;gap:10px;flex-wrap:wrap}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#1f2433;color:#fff;padding:9px 16px;border-radius:999px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50;max-width:90vw;text-align:center}
+.toast.show{opacity:1}
+@media(max-width:560px){.kpis{grid-template-columns:repeat(2,1fr)}.nav{margin-left:0}.who{display:none}.grid2{grid-template-columns:1fr}.brand span{max-width:150px}}
+
+/* ---------- PDF report ---------- */
+#printArea{position:fixed;left:-10000px;top:0;width:794px}
+.rp{width:794px;background:#fff;color:#1f2433;font-family:var(--font);font-size:11.5px;line-height:1.4}
+.rp-code{text-align:right;font-size:9px;color:#555;padding:0 22px 3px}
+.rp-head{background:var(--navy);color:#fff;display:grid;grid-template-columns:96px 1fr 80px;align-items:stretch}
+.rp-head .l2{background:#fff;display:flex;align-items:center;justify-content:center;padding:6px}
+.rp-head .l2 img{max-width:84px;max-height:60px}
+.rp-head .mid{padding:12px 16px;text-align:center}
+.rp-head h1{margin:0;font-size:21px}
+.rp-head .mid div{font-size:11px;opacity:.9;margin-top:2px}
+.rp-head .l1{display:flex;align-items:center;justify-content:center;padding:6px}
+.rp-head .l1 img{width:64px;height:64px;object-fit:cover;border-radius:6px}
+.rp-meta{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #e9e2d0}
+.rp-meta div{padding:9px 22px;border-right:1px solid #e9e2d0}
+.rp-meta div:last-child{border-right:0}
+.rp-meta small{display:block;color:#6b7280;font-size:9px;text-transform:uppercase;letter-spacing:.05em}
+.rp-meta b{font-size:12px}
+.rp-sum{display:flex;gap:22px;align-items:center;padding:16px 22px}
+.rp-leg div{margin:3px 0;font-size:12px}
+.rp-leg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:7px}
+.rp h3{margin:14px 22px 8px;color:var(--navy);font-size:15px;border-bottom:2px solid #c8911a;padding-bottom:4px}
+.rp-sec{display:grid;grid-template-columns:22px 190px 1fr 56px 108px;gap:8px;align-items:center;padding:6px 22px;border-bottom:1px solid #f0ebdc}
+.rp-sec .n{background:var(--navy);color:#fff;border-radius:4px;text-align:center;font-weight:700;font-size:10px;padding:2px 0}
+.rp-bar{height:11px;border-radius:6px;background:#ece6d6;display:flex;overflow:hidden}
+.rp-bar i{display:block;height:100%}
+.rp table{width:calc(100% - 44px);margin:0 22px;border-collapse:collapse}
+.rp th{background:var(--navy);color:#fff;text-align:left;padding:5px 7px;font-size:10px}
+.rp td{border-bottom:1px solid #eee7d6;padding:5px 7px;vertical-align:top}
+.rp tr{page-break-inside:avoid}
+.rp .sh td{background:#f1ecdd;font-weight:700;color:var(--navy)}
+.rp .ok{color:#1e8a3c;font-weight:700}.rp .no{color:#c0392b;font-weight:700}.rp .pe{color:#9ca3af}
+.rp-fail{margin:0 22px 8px;border:1px solid #f1b9b9;border-left:4px solid #c0392b;border-radius:4px;padding:7px 10px;background:#fffafa;page-break-inside:avoid}
+.rp-foot{margin:16px 22px 0;padding-top:8px;border-top:1px solid #e9e2d0;font-size:9px;color:#6b7280;display:flex;justify-content:space-between;gap:12px}
+.rp-sign{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin:26px 22px 6px}
+.rp-sign div{border-top:1px solid #444;padding-top:4px;font-size:10px;color:#555}
+@media print{body.printing>*:not(#printArea){display:none!important}body.printing #printArea{position:static;width:auto}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="printArea"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+   DEPLOYMENT SETTING  -  paste your Cloudflare Worker URL between the quotes,
+   then upload this file to GitHub. Empty = DEMO MODE (data stays in this browser only).
+   ===================================================================== */
+const BAKED_API_URL = '';
+
+const DEFAULT_LOGO_MAIN = 'data:image/png;base64,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';
+const DEFAULT_LOGO_2    = 'data:image/png;base64,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';
+const DATA = {"sections": [{"c": 1, "en": "Opening Procedures", "ta": "திறப்பு நடைமுறைகள்"}, {"c": 2, "en": "Stock & Inventory Control", "ta": "இருப்பு மற்றும் சரக்குக் கட்டுப்பாடுகள்"}, {"c": 3, "en": "Security & Loss Prevention", "ta": "பாதுகாப்பு மற்றும் இழப்பு தடுப்பு"}, {"c": 4, "en": "Sales & Billing", "ta": "விற்பனை மற்றும் பில்லிங்"}, {"c": 5, "en": "Customer Service & Experience", "ta": "வாடிக்கையாளர் சேவை மற்றும் அனுபவம்"}, {"c": 6, "en": "Visual Merchandising", "ta": "காட்சி வணிகம்"}, {"c": 7, "en": "Cash & Finance Management", "ta": "ரொக்கம் மற்றும் நிதி மேலாண்மை"}, {"c": 8, "en": "Staff Management", "ta": "பணியாளர் மேலாண்மை"}, {"c": 9, "en": "Closing Procedures", "ta": "முடிவு நடைமுறைகள்"}], "tasks": [{"id": 1, "s": 1, "en": "Key holders to confirm that the store is opened.", "ta": "சாவியை வைத்திருப்பவர்கள், கடை திறக்கப்பட்டிருப்பதை உறுதிசெய்து கொள்ளவும்."}, {"id": 2, "s": 1, "en": "Verify staff attendance, punctuality, appearance and uniform.", "ta": "பணியாளர்களின் வருகை, நேரந்தவறாமை, தோற்றம் மற்றும் சீருடை ஆகியவை சரிபார்க்கப்படுவதை உறுதிசெய்யவும்."}, {"id": 3, "s": 1, "en": "Confirm the alarm is deactivated, and that night alarm logs and signs of forced entry have been checked.", "ta": "அலாரம் செயலிழக்கச் செய்யப்பட்டுள்ளதா என்பதையும், இரவு நேர அலாரம் பதிவுகள் மற்றும் வலுக்கட்டாயமாக நுழைந்ததற்கான அறிகுறிகள் சரிபார்க்கப்பட்டுள்ளனவா என்பதையும் உறுதிப்படுத்தவும்."}, {"id": 4, "s": 1, "en": "Ensure the safe is opened under dual custody (two authorised persons).", "ta": "பாதுகாப்புப் பெட்டகம் இரட்டைப் பொறுப்பின் கீழ் (அங்கீகரிக்கப்பட்ட இரண்டு நபர்கள்) திறக்கப்படுவதை உறுதிசெய்யவும்."}, {"id": 5, "s": 1, "en": "Ensure lights, display lights, AC, payment systems and CCTV are working (confirm all cameras are recording).", "ta": "விளக்குகள், காட்சி விளக்குகள், ஏசி, கட்டண அமைப்புகள் மற்றும் சிசிடிவி ஆகியவை இயக்கத்தில் இருப்பதை உறுதிசெய்யவும் (அனைத்து கேமராக்களும் பதிவு செய்கின்றனவா என்பதை உறுதிப்படுத்தவும்)."}, {"id": 6, "s": 1, "en": "Check that the opening stock count matches the previous day's closing stock.", "ta": "தொடக்க இருப்பு (opening stock) எண்ணிக்கை, முந்தைய நாளின் இறுதி எண்ணிக்கையுடன் (closing stock) பொருந்துகிறதா என்பதைச் சரிபார்க்கவும்."}, {"id": 7, "s": 1, "en": "Ensure the gold/silver rate board is updated/verified for today's rate (rates used must also be recorded).", "ta": "தங்கம்/வெள்ளி விலைப் பலகை இன்றைய விலைக்குப் புதுப்பிக்கப்பட்டு/சரிபார்க்கப்பட்டுள்ளதை உறுதிசெய்யுங்கள் (மேலும் பயன்படுத்தப்பட்ட விலைகள் பதிவு செய்யப்பட வேண்டும்)."}, {"id": 8, "s": 2, "en": "Ensure display jewellery from the safe is placed in the showcases as per the tray/table plan.", "ta": "பாதுகாப்புப் பெட்டகத்தில் உள்ள காட்சி நகைகள், தட்டு/மேசைத் திட்டத்தின்படி காட்சிப் பெட்டிகளில் வைக்கப்படுவதை உறுதிசெய்யவும்."}, {"id": 9, "s": 2, "en": "Ensure items given for repair, polishing or resizing, items handed to craftsmen, items taken by customers, and approval/memo items received from vendors are recorded.", "ta": "பழுதுபார்ப்பதற்கோ, மெருகூட்டுவதற்கோ, அளவை மாற்றுவதற்கோ அல்லது கைவினைஞரிடம் ஒப்படைக்கப்படும் பொருட்களோ, வாடிக்கையாளர்களால் எடுக்கப்பட்ட அல்லது விற்பனையாளர்களிடமிருந்து பெறப்பட்ட ஒப்புதல்/குறிப்புப் பொருட்களோ பதிவு செய்யப்படுவதை உறுதிசெய்யவும்."}, {"id": 10, "s": 2, "en": "Ensure incoming stock weight, purity and HUID are verified against the invoice.", "ta": "வரும் சரக்குகளின் எடை, தூய்மை மற்றும் HUID ஆகியவை விலைப்பட்டியலுடன் (INVOICE) சரிபார்க்கப்படுவதை உறுதிசெய்யவும்."}, {"id": 11, "s": 3, "en": "Ensure the 'one tray per customer' rule is enforced at the counters.", "ta": "கவுன்டர்களில் 'ஒரு வாடிக்கையாளருக்கு ஒரு தட்டு' என்ற விதி அமல்படுத்தப்படுவதை உறுதிசெய்யவும்."}, {"id": 12, "s": 4, "en": "Confirm billing software, weighing scales, card/UPI machines and purity testing equipment (touchstone/XRF) are working.", "ta": "பில்லிங் மென்பொருள், எடை அளவுகள், கார்டு/UPI இயந்திரங்கள் மற்றும் தூய்மை சோதனை உபகரணங்கள் (டச்ஸ்டோன்/XRF) ஆகியவை செயல்படுகின்றனவா என்பதை உறுதிப்படுத்தவும்."}, {"id": 13, "s": 4, "en": "Ensure old gold transaction records are verified: purity test, deduction, customer ID number and KYC.", "ta": "பழைய தங்கப் பரிவர்த்தனைப் பதிவுகள் சரிபார்க்கப்பட்டுள்ளதை உறுதிசெய்யவும்: தூய்மைச் சோதனை, பிடித்தம், வாடிக்கையாளர் அடையாள எண் மற்றும் வாடிக்கையாளரை அறிதல் (KYC) உறுதிசெய்யவும்."}, {"id": 14, "s": 4, "en": "Confirm advance bookings, custom orders and scheme instalments.", "ta": "முன்கூட்டிய முன்பதிவுகள், தனிப்பயன் ஆர்டர்கள் மற்றும் திட்டக் கட்டணங்களை உறுதிப்படுத்தவும்."}, {"id": 15, "s": 4, "en": "Ensure KYC/PAN is collected for high-value transactions and the records are filed.", "ta": "அதிக மதிப்புள்ள பரிவர்த்தனைகளுக்கு KYC/PAN சேகரிக்கப்பட்டு, அதற்கான பதிவுகள் தாக்கல் செய்யப்படுவதை உறுதிசெய்யவும்."}, {"id": 16, "s": 5, "en": "Ensure mirrors, showcases, trays and sample tables are cleaned; keep sample mirrors, cloths and sanitizer ready.", "ta": "கண்ணாடிகள், காட்சிப் பெட்டிகள், தட்டுகள் மற்றும் மாதிரி மேசைகள் சுத்தம் செய்யப்பட்டுள்ளதை உறுதி செய்யவும்; மாதிரி கண்ணாடிகள், துணிகள் மற்றும் கிருமிநாசினி தயாராக வைத்திருக்கவும்."}, {"id": 17, "s": 5, "en": "Ensure complaints, returns and exchanges are handled and recorded in the CRM app.", "ta": "புகார்கள், திருப்பியளித்தல் மற்றும் மாற்றுதல் ஆகியவை CRM செயலியில் கையாளப்பட்டுப் பதிவு செய்யப்படுவதை உறுதிசெய்யவும்."}, {"id": 18, "s": 5, "en": "Ensure sales and enquiries logged in the CRM are followed up.", "ta": "CRM-இல் செய்யப்படும் விற்பனைகள் மற்றும் விசாரணைகள் பின்தொடரப்படுவதை உறுதிசெய்யுங்கள்."}, {"id": 19, "s": 6, "en": "Confirm price and offer display boards are correct.", "ta": "விலை மற்றும் சலுகை அறிவிப்புப் பலகைகள் சரியாக உள்ளதா என உறுதிப்படுத்தவும்."}, {"id": 20, "s": 7, "en": "Ensure cash is counted at opening and closing and reconciled with POS totals and UPI/bank/card checks.", "ta": "கடை திறக்கும்போதும் மூடும்போதும் பணம் எண்ணப்படுவதையும், அதனை POS மொத்தத் தொகைகள் மற்றும் UPI/வங்கி/அட்டை சரிபார்ப்புகளுடன் ஒப்பிட்டுச் சரிக்கட்டுவதையும் உறுதிசெய்யவும்."}, {"id": 21, "s": 7, "en": "Ensure petty cash expenses are recorded.", "ta": "சில்லறைப் பணச் செலவுகள் பதிவு செய்யப்படுவதை உறுதிசெய்யவும்."}, {"id": 22, "s": 7, "en": "Confirm that cash has been deposited in the bank or held, as per policy.", "ta": "கொள்கையின்படி பணம் வங்கியில் செலுத்தப்பட்டுள்ளதா அல்லது முடக்கப்பட்டுள்ளதா என்பதை உறுதிப்படுத்தவும்."}, {"id": 23, "s": 7, "en": "Ensure the day's sales, transactions and advances have been verified.", "ta": "அன்றைய விற்பனைகள், பரிவர்த்தனைகள் மற்றும் முன்பணங்கள் சரிபார்க்கப்பட்டிருப்பதை உறுதிசெய்யவும்."}, {"id": 24, "s": 8, "en": "Ensure a short morning meeting is held (targets, offers, schemes, new arrivals, reminders).", "ta": "ஒரு சுருக்கமான காலைக் கூட்டம் நடத்தப்படுவதை உறுதிசெய்யுங்கள் (இலக்குகள், சலுகைகள், திட்டங்கள், புதிய வரவுகள், நினைவூட்டல்கள்)."}, {"id": 25, "s": 8, "en": "Ensure staff-related issues or incidents are recorded.", "ta": "பணியாளர் தொடர்பான பிரச்சனைகள் அல்லது சம்பவங்கள் பதிவு செய்யப்படுவதை உறுதிசெய்யவும்."}, {"id": 26, "s": 9, "en": "Ensure closing stock (weight and count) is verified against the day's sales, returns and movements; discrepancies must be resolved, or recorded and reported to seniors.", "ta": "இறுதி இருப்பு (எடை மற்றும் எண்ணிக்கை) அன்றைய விற்பனை, திருப்பங்கள் மற்றும் நகர்வுகளுடன் சரிபார்க்கப்படுவதை உறுதிசெய்யவும்; முரண்பாடுகள் தீர்க்கப்பட வேண்டும், அல்லது பதிவு செய்யப்பட்டு உயர் அதிகாரிகளுக்குத் தெரிவிக்கப்பட வேண்டும்."}, {"id": 27, "s": 9, "en": "Confirm all jewellery, repair items and valuables are returned to the safe.", "ta": "அனைத்து நகைகள், பழுதுபார்க்கும் பொருட்கள் மற்றும் மதிப்புமிக்க பொருட்கள் பாதுகாப்புப் பெட்டகத்தில் திருப்பி வைக்கப்பட்டுள்ளதா என்பதை உறுதிப்படுத்தவும்."}, {"id": 28, "s": 9, "en": "Ensure the safe is locked under dual custody; the time and the authorising staff must be recorded.", "ta": "பாதுகாப்புப் பெட்டகம் இரட்டைப் பாதுகாப்பின் கீழ் பூட்டப்பட்டுள்ளதை உறுதிசெய்யுங்கள்; நேரமும் அதை அங்கீகரித்த பணியாளரும் பதிவு செய்யப்பட வேண்டும்."}, {"id": 29, "s": 9, "en": "Confirm all billing entries are completed and the day-end report (sales, cash, stock) is printed/saved.", "ta": "அனைத்துப் பில்லிங் பதிவுகளும் முடிக்கப்பட்டு, அன்றைய தின இறுதி அறிக்கை (விற்பனை, ரொக்கம், இருப்பு) அச்சிடப்பட்டு/சேமிக்கப்பட்டுள்ளதா என்பதை உறுதிப்படுத்தவும்."}, {"id": 30, "s": 9, "en": "Confirm billing data has been backed up / filed.", "ta": "கட்டணத் தரவுகள் காப்புப் பிரதி எடுக்கப்பட்டுள்ளதா என்பதை உறுதிப்படுத்தவும். (BACK UP / FILING)"}, {"id": 31, "s": 9, "en": "Confirm lights, AC and electronic devices (except security systems) are switched off; also ensure CCTV and alarm are running.", "ta": "விளக்குகள், ஏசி மற்றும் மின்னணுசாதனங்கள் (பாதுகாப்பு அமைப்புகளைத் தவிர) அணைக்கப்பட்டுள்ளதா என்பதை உறுதிப்படுத்தவும்; சிசிடிவி மற்றும் அலாரம் இயங்குகின்றனவா என்பதையும் உறுதிசெய்யவும்."}, {"id": 32, "s": 9, "en": "Ensure doors and shutters are locked, and hand over the keys as per the key register.", "ta": "கதவுகளும் ஜன்னல் கதவுகளும் பூட்டப்பட்டிருப்பதை உறுதிசெய்து, சாவிப் பதிவேட்டின்படி சாவிகளை ஒப்படைக்கவும்."}]};
+const TZ = 'Asia/Kolkata';
+
+/* Defaults for the Settings screen. Admin can change all of these in the app (Settings). */
+const DEFAULTS = {
+  company: 'Suba Valli Vilas Jewellery',
+  appTitle: 'Store Operation Checklist',
+  formCode: 'TEM/106/SAL/001/HS/OCT-26',
+  color: '#5c0f0f',
+  defaultLang: 'en',
+  logoMain: '', logoSecond: '', showLogo2: true,
+  pdfFooter: '',
+  apiUrl: '',
+  stores: [{id:'SVV-01',name:'Main Store'},{id:'SVV-02',name:'Branch 2'}]
+};
+const DEMO_USERS = [
+  {u:'staff1',p:'1234',name:'Ramesh',role:'Staff',store:'SVV-01'},
+  {u:'staff2',p:'2345',name:'Priya',role:'Staff',store:'SVV-02'},
+  {u:'manager',p:'9999',name:'Store Manager',role:'Admin',store:'ALL'}
+];
+
+/* ---------------- language ---------------- */
+const I18N = {
+ en:{signin:'Sign in',user:'Username',pin:'PIN',bad:'Wrong username or PIN',dash:'Dashboard',check:'Checklist',logout:'Logout',settings:'Settings',
+  yday:'Yesterday',today:'Today',d7:'7 Days',d30:'30 Days',go:'Go',to:'to',total:'TOTAL',done:'DONE',failed:'FAILED',pending:'PENDING',
+  secScore:'Section score',failedPts:'Failed points',noFail:'No failed points in this period.',noData:'No data for',notSub:'tasks not submitted',
+  pTab:'Pending',cTab:'Completed',yes:'Yes',no:'No',remPh:'Remarks (required when No)',remOpt:'Remarks (optional)',addRem:'+ Add remark',mand:'Mandatory',
+  submitSec:'Submit section',left:'left',submitted:'Submitted',confirmSub:'Submit this section? It will be locked and the time recorded.',
+  pdf:'Download PDF',progress:'Progress',nothing:'Nothing here.',allSub:'All sections submitted. Report is ready.',tasks:'tasks',store:'Store',date:'Date',
+  passed:'passed',attention:'failed points need attention',onTrack:'On track',partial:'Partial',needRem:'Add a remark for every "No" first',
+  moved:'Moved to Completed',secReady:'All required points answered - ready to submit',rpTitle:'Daily Execution Report (DER)',rpSec:'Section-wise score',rpFail:'Failed points & remarks',
+  rpLog:'Detailed checklist log',rpOverall:'Overall score',rpBy:'Prepared by',rpGen:'Generated',rpMgr:'Store Manager signature',rpAud:'Reviewed by',pt:'Checkpoint',ans:'Answer',rem:'Remarks',
+  time:'Time',draft:'Draft',noPending:'Pending',noFailTxt:'No failed points. All answered points passed.',local:'Saved on this device',syncing:'Syncing...',synced:'Saved',syncErr:'Not synced yet - will retry',
+  sessionEnd:'Session expired. Please sign in again.',
+  company:'Company / Store name',appTitle:'App title',formCode:'Form code (shown on PDF)',logoMain:'Main logo',logo2:'Second logo (C&B)',upload:'Upload',reset:'Reset',
+  brand:'Brand colour',defLang:'Default language',stores:'Stores',storeId:'Store ID',storeName:'Store name',addStore:'+ Add store',pdfNote:'PDF footer note',
+  conn:'Connection',apiUrl:'Worker URL (Google Sheet link)',test:'Test connection',saveCfg:'Save settings',exp:'Export',imp:'Import',resetAll:'Reset all',saved:'Settings saved',
+  showLogo2:'Show second logo in the PDF header',logoBig:'Logo is too large - use a smaller image',idHint:'Do not change a Store ID after data has been saved for it.',
+  connOk:'Connected',connFail:'Could not connect',demoMode:'Demo mode - data stays in this browser',confirmReset:'Reset all settings to default?',basics:'Branding',cfgHint:'Changes apply to the whole app and the PDF.'},
+ ta:{signin:'உள்நுழை',user:'பயனர் பெயர்',pin:'PIN',bad:'பயனர் பெயர் அல்லது PIN தவறு',dash:'முகப்புப் பலகை',check:'சரிபார்ப்பு',logout:'வெளியேறு',settings:'அமைப்புகள்',
+  yday:'நேற்று',today:'இன்று',d7:'7 நாட்கள்',d30:'30 நாட்கள்',go:'செல்',to:'முதல்',total:'மொத்தம்',done:'முடிந்தது',failed:'தோல்வி',pending:'நிலுவை',
+  secScore:'பகுதி வாரியான மதிப்பெண்',failedPts:'தோல்வியடைந்த புள்ளிகள்',noFail:'இந்தக் காலத்தில் தோல்வியடைந்த புள்ளிகள் இல்லை.',noData:'தரவு இல்லை:',notSub:'பணிகள் சமர்ப்பிக்கப்படவில்லை',
+  pTab:'நிலுவையில்',cTab:'முடிந்தது',yes:'ஆம்',no:'இல்லை',remPh:'குறிப்புகள் ("இல்லை" எனில் கட்டாயம்)',remOpt:'குறிப்புகள் (விருப்பம்)',addRem:'+ குறிப்பு சேர்',mand:'கட்டாயம்',
+  submitSec:'பகுதியைச் சமர்ப்பி',left:'மீதம்',submitted:'சமர்ப்பிக்கப்பட்டது',confirmSub:'இந்தப் பகுதியைச் சமர்ப்பிக்கவா? சமர்ப்பித்தபின் மாற்ற முடியாது; நேரம் பதிவாகும்.',
+  pdf:'PDF பதிவிறக்கு',progress:'முன்னேற்றம்',nothing:'எதுவும் இல்லை.',allSub:'அனைத்துப் பகுதிகளும் சமர்ப்பிக்கப்பட்டன. அறிக்கை தயார்.',tasks:'பணிகள்',store:'கடை',date:'தேதி',
+  passed:'தேர்ச்சி',attention:'தோல்வி புள்ளிகள் கவனிக்கப்பட வேண்டும்',onTrack:'சரியான பாதையில்',partial:'பகுதி',needRem:'ஒவ்வொரு "இல்லை"-க்கும் முதலில் குறிப்பு சேர்க்கவும்',
+  moved:'முடிந்தவை பகுதிக்கு மாற்றப்பட்டது',secReady:'தேவையான அனைத்தும் பதிலளிக்கப்பட்டன - சமர்ப்பிக்கலாம்',rpTitle:'தினசரி செயல்பாட்டு அறிக்கை (DER)',rpSec:'பகுதி வாரியான மதிப்பெண்',rpFail:'தோல்வியடைந்த புள்ளிகள் & குறிப்புகள்',
+  rpLog:'விரிவான சரிபார்ப்புப் பதிவு',rpOverall:'ஒட்டுமொத்த மதிப்பெண்',rpBy:'தயாரித்தவர்',rpGen:'உருவாக்கிய நேரம்',rpMgr:'கடை மேலாளர் கையொப்பம்',rpAud:'ஆய்வு செய்தவர்',pt:'சரிபார்ப்பு புள்ளி',ans:'பதில்',rem:'குறிப்புகள்',
+  time:'நேரம்',draft:'வரைவு',noPending:'நிலுவை',noFailTxt:'தோல்வியடைந்த புள்ளிகள் இல்லை.',local:'இந்தச் சாதனத்தில் சேமிக்கப்பட்டது',syncing:'ஒத்திசைக்கிறது...',synced:'சேமிக்கப்பட்டது',syncErr:'இன்னும் ஒத்திசைக்கவில்லை - மீண்டும் முயற்சிக்கப்படும்',
+  sessionEnd:'அமர்வு முடிந்தது. மீண்டும் உள்நுழையவும்.',
+  company:'நிறுவனம் / கடை பெயர்',appTitle:'செயலி தலைப்பு',formCode:'படிவ குறியீடு (PDF-இல் தோன்றும்)',logoMain:'முதன்மை லோகோ',logo2:'இரண்டாம் லோகோ (C&B)',upload:'பதிவேற்று',reset:'மீட்டமை',
+  brand:'முதன்மை நிறம்',defLang:'இயல்பு மொழி',stores:'கடைகள்',storeId:'கடை குறியீடு',storeName:'கடை பெயர்',addStore:'+ கடை சேர்',pdfNote:'PDF அடிக்குறிப்பு',
+  conn:'இணைப்பு',apiUrl:'Worker URL (Google Sheet இணைப்பு)',test:'இணைப்பைச் சோதி',saveCfg:'அமைப்புகளைச் சேமி',exp:'ஏற்றுமதி',imp:'இறக்குமதி',resetAll:'அனைத்தையும் மீட்டமை',saved:'அமைப்புகள் சேமிக்கப்பட்டன',
+  showLogo2:'PDF தலைப்பில் இரண்டாம் லோகோவைக் காட்டு',logoBig:'லோகோ மிகப் பெரியது - சிறிய படத்தைப் பயன்படுத்தவும்',idHint:'தரவு சேமித்த பின் கடை குறியீட்டை மாற்ற வேண்டாம்.',
+  connOk:'இணைக்கப்பட்டது',connFail:'இணைக்க முடியவில்லை',demoMode:'டெமோ முறை - தரவு இந்த உலாவியில் மட்டும்',confirmReset:'அனைத்து அமைப்புகளையும் இயல்புநிலைக்கு மாற்றவா?',basics:'அடையாளம்',cfgHint:'மாற்றங்கள் முழு செயலிக்கும் PDF-க்கும் பொருந்தும்.'}
+};
+
+/* ---------------- helpers ---------------- */
+const store = {
+  get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},
+  del(k){try{localStorage.removeItem(k)}catch(e){}}
+};
+let cfg = {...DEFAULTS, ...store.get('svv_cfg',{})};
+const API_URL = () => (cfg.apiUrl || BAKED_API_URL || '').trim();
+let SECS = DATA.sections, TASKS = DATA.tasks.map(t=>({...t,m:t.m!==false}));
+(function(){ const m=store.get('svv_master',null); if(m&&m.tasks&&m.tasks.length&&API_URL()) applyMaster(m,false); })();
+function applyMaster(m,save=true){ SECS=m.sections; TASKS=m.tasks.map(t=>({...t,m:t.m!==false})); if(save) store.set('svv_master',m); }
+
+const S = {
+  lang: store.get('svv_lang',null) || cfg.defaultLang || 'en',
+  user: store.get('svv_user',null),
+  view: 'dash', store: store.get('svv_store',null),
+  from: null, to: null, cdate: null, tab: 'pending',
+  collapsed: {}, openRem: {}, keep: {},
+  resp: store.get('svv_resp',{}), sub: store.get('svv_sub',{}),
+  loginErr: '', setDraft: null
+};
+const T = k => (I18N[S.lang][k] ?? I18N.en[k] ?? k);
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const L = o => o[S.lang] || o.en;
+const mainLogo = () => cfg.logoMain || DEFAULT_LOGO_MAIN;
+const secLogo  = () => cfg.logoSecond || DEFAULT_LOGO_2;
+function hexMix(hex,pct){ const n=parseInt(hex.slice(1),16),r=n>>16,g=(n>>8)&255,b=n&255,m=c=>Math.round(c+(255-c)*pct).toString(16).padStart(2,'0'); return '#'+m(r)+m(g)+m(b); }
+function applyTheme(){
+  const c=/^#[0-9a-f]{6}$/i.test(cfg.color)?cfg.color:DEFAULTS.color;
+  document.documentElement.style.setProperty('--navy',c);
+  document.documentElement.style.setProperty('--tint',hexMix(c,.92));
+  const tm=$('#themeMeta'); if(tm) tm.content=c;
+  document.title=`${cfg.company} - ${cfg.appTitle}`;
+}
+
+/* dates (IST) */
+const todayISO = () => new Date().toLocaleDateString('en-CA',{timeZone:TZ});
+const addDays = (iso,n) => { const d=new Date(iso+'T00:00:00Z'); d.setUTCDate(d.getUTCDate()+n); return d.toISOString().slice(0,10); };
+const daysBetween = (a,b) => { const out=[]; let d=a, i=0; while(d<=b && i<92){out.push(d); d=addDays(d,1); i++;} return out; };
+const nowISO = () => new Date(Date.now()+5.5*3600e3).toISOString().slice(0,19)+'+05:30';
+const fmtDT = iso => iso ? new Date(iso).toLocaleString(S.lang==='ta'?'ta-IN':'en-IN',{timeZone:TZ,day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',hour12:true}) : '';
+const fmtD = iso => new Date(iso+'T00:00:00+05:30').toLocaleDateString(S.lang==='ta'?'ta-IN':'en-IN',{timeZone:TZ,weekday:'short',day:'2-digit',month:'short'});
+
+/* data */
+const secByCode = c => SECS.find(s=>s.c===c) || {c,en:'?',ta:'?'};
+const secOf = id => TASKS.find(t=>t.id===id).s;
+const tasksIn = c => TASKS.filter(t=>t.s===c);
+const rk = (id,date=S.cdate,st=S.store) => `${date}|${st}|${id}`;
+const sk = (c,date=S.cdate,st=S.store) => `${date}|${st}|${c}`;
+const getR = id => S.resp[rk(id)];
+const complete = r => !!(r && r.a && (r.a==='Y' || (r.r||'').trim().length>0));
+const isSub = c => !!S.sub[sk(c)];
+const reqDone = c => tasksIn(c).filter(t=>t.m).every(t=>complete(getR(t.id)));
+const persist = () => { store.set('svv_resp',S.resp); store.set('svv_sub',S.sub); };
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toast.h); toast.h=setTimeout(()=>t.classList.remove('show'),2400); }
+function setSync(st){ const d=$('#syncDot'); if(d){ d.className='dot '+st; d.title=st==='ok'?T('synced'):st==='syncing'?T('syncing'):st==='err'?T('syncErr'):(API_URL()?'':T('local')); } }
+
+/* ---------------- API layer: App -> Cloudflare Worker -> Google Sheet (+ GitHub backup) ---------------- */
+function rowFor(date,st,t){
+  const r=S.resp[rk(t.id,date,st)]; if(!r) return null;
+  const sec=secByCode(t.s), sb=S.sub[sk(t.s,date,st)];
+  return {Date:date,Store:st,SectionCode:t.s,Section:sec.en,TaskID:t.id,Task:t.en,Answer:r.a==='Y'?'Yes':'No',Remarks:r.r||'',
+          Status:sb?'Submitted':'Draft',FilledBy:r.by||'',FilledAt:r.at||'',SubmittedAt:sb?sb.at:''};
+}
+async function api(kind,payload){
+  const u=API_URL(); if(!u) return null;
+  setSync('syncing');
+  try{
+    const res=await fetch(u,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({kind,token:S.user&&S.user.token,...payload})});
+    const j=await res.json();
+    if(j.err==='auth'&&kind!=='login'){ setSync('err'); toast(T('sessionEnd')); logout(); return j; }
+    setSync(j.ok===false?'err':'ok'); return j;
+  }catch(e){ setSync('err'); return null; }
+}
+/* offline-safe sync: every edit is marked dirty and re-sent until the server confirms */
+let DIRTY=store.get('svv_dirty',{}), PENDSUB=store.get('svv_pendsub',[]), flushT=null, flushing=false;
+function markDirty(id){ DIRTY[rk(id)]=(DIRTY[rk(id)]||0)+1; store.set('svv_dirty',DIRTY); scheduleFlush(); }
+function scheduleFlush(){ if(!API_URL()||!S.user) return; clearTimeout(flushT); flushT=setTimeout(flush,800); }
+async function flush(){
+  if(!API_URL()||!S.user||flushing) return; flushing=true;
+  try{
+    for(const p of [...PENDSUB]){ const j=await api('submit',p); if(j&&j.ok){ PENDSUB=PENDSUB.filter(x=>x!==p); store.set('svv_pendsub',PENDSUB); } else return; }
+    const snap={...DIRTY}, keys=Object.keys(snap); if(!keys.length) return;
+    const rows=keys.map(k=>{const [d,s,id]=k.split('|'); const t=TASKS.find(t=>t.id==id); return t?rowFor(d,s,t):null;}).filter(Boolean);
+    if(rows.length){ const j=await api('draft',{rows}); if(!(j&&j.ok)) return; }
+    keys.forEach(k=>{ if(DIRTY[k]===snap[k]) delete DIRTY[k]; }); store.set('svv_dirty',DIRTY);
+  } finally { flushing=false; }
+}
+window.addEventListener('online',()=>flush());
+async function pull(from,to,st){
+  if(!API_URL()||!S.user) return;
+  try{
+    const q=new URLSearchParams({action:'responses',from,to,store:st,token:S.user.token||''});
+    const j=await (await fetch(API_URL()+'?'+q)).json();
+    if(j.err==='auth'){ toast(T('sessionEnd')); return logout(); }
+    (j.rows||[]).forEach(r=>{
+      const k=`${r.Date}|${r.Store}|${r.TaskID}`, loc=S.resp[k];
+      if(DIRTY[k]&&loc) return;                       // keep local unsynced edits
+      S.resp[k]={a:r.Answer==='Yes'?'Y':'N',r:r.Remarks,by:r.FilledBy,at:r.FilledAt};
+      if(r.Status==='Submitted') S.sub[`${r.Date}|${r.Store}|${r.SectionCode}`]={by:r.FilledBy,at:r.SubmittedAt};
+    });
+    persist();
+  }catch(e){ setSync('err'); }
+}
+async function loadRemote(){
+  if(!API_URL()) return;
+  try{
+    const j=await (await fetch(API_URL()+'?action=config')).json();
+    if(!j||!j.ok) return;
+    if(j.config) cfg={...cfg,...j.config,apiUrl:cfg.apiUrl};
+    if(j.stores&&j.stores.length) cfg.stores=j.stores;
+    if(j.master&&j.master.tasks&&j.master.tasks.length) applyMaster(j.master);
+    store.set('svv_cfg',cfg); applyTheme(); render();
+  }catch(e){}
+}
+
+/* ---------------- login ---------------- */
+async function doLogin(){
+  const u=$('#lu').value.trim().toLowerCase(), p=$('#lp').value.trim();
+  let user=null;
+  if(API_URL()){ const j=await api('login',{u,p}); if(j&&j.ok&&j.user) user={...j.user,token:j.token}; }
+  else user=DEMO_USERS.find(x=>x.u===u&&x.p===p)||null;
+  if(!user){ S.loginErr=T('bad'); render(); return; }
+  S.user={u:user.u,name:user.name,role:user.role,store:user.store,token:user.token||''}; store.set('svv_user',S.user);
+  S.store=user.store==='ALL'?(store.get('svv_store',null)||cfg.stores[0].id):user.store;
+  S.cdate=todayISO(); S.from=S.to=todayISO(); S.view='dash'; S.loginErr='';
+  await pull(S.from,S.to,S.store); render(); flush();
+}
+function logout(){ S.user=null; store.del('svv_user'); render(); }
+
+/* ---------------- answers ---------------- */
+function answer(id,v){
+  const c=secOf(id); if(isSub(c)) return;
+  const k=rk(id), cur=S.resp[k]||{};
+  S.resp[k]={a:v,r:cur.r||'',by:S.user.u,at:nowISO()};
+  if(S.tab==='completed'&&!complete(S.resp[k])) S.keep[id]=1;
+  persist(); markDirty(id); updateHead();
+  if(v==='N'){ render(); const ta=document.querySelector(`[data-rem="${id}"]`); if(ta) ta.focus(); }
+  else{
+    const card=document.querySelector(`[data-card="${id}"]`);
+    if(card) card.querySelectorAll('.yn button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+    if(S.tab==='pending'&&!S.keep[id]) toast(T('moved'));
+    setTimeout(render,320);
+  }
+}
+async function submitSection(c){
+  if(!reqDone(c)){ toast(T('needRem')); return; }
+  if(!confirm(T('confirmSub'))) return;
+  const ts=tasksIn(c), at=nowISO(), yes=ts.filter(t=>(getR(t.id)||{}).a==='Y').length;
+  S.sub[sk(c)]={by:S.user.u,at,yes,total:ts.length};
+  S.keep={}; persist(); render();
+  const payload={section:{Date:S.cdate,Store:S.store,SectionCode:c,Section:secByCode(c).en,Yes:yes,Total:ts.length,SubmittedBy:S.user.u,SubmittedAt:at},
+                 rows:ts.map(t=>rowFor(S.cdate,S.store,t)).filter(Boolean)};
+  if(!API_URL()) return;
+  const j=await api('submit',payload);
+  if(!(j&&j.ok)){ PENDSUB.push(payload); store.set('svv_pendsub',PENDSUB); }
+}
+
+/* ---------------- aggregation ---------------- */
+function agg(from,to,st){
+  const dates=daysBetween(from,to), secs=SECS.map(s=>({...s,total:0,yes:0,no:0,pend:0})), idx={}; secs.forEach(s=>idx[s.c]=s);
+  const fails=[];
+  dates.forEach(d=>TASKS.forEach(t=>{
+    const sec=idx[t.s]; if(!sec) return;
+    const r=S.resp[rk(t.id,d,st)]; sec.total++;
+    if(!r||!r.a) sec.pend++; else if(r.a==='Y') sec.yes++; else { sec.no++; fails.push({d,t,r}); }
+  }));
+  const tot=secs.reduce((a,s)=>({total:a.total+s.total,yes:a.yes+s.yes,no:a.no+s.no,pend:a.pend+s.pend}),{total:0,yes:0,no:0,pend:0});
+  fails.sort((a,b)=>b.d.localeCompare(a.d)||a.t.s-b.t.s||a.t.id-b.t.id);
+  return {secs,tot,fails,dates};
+}
+
+/* ---------------- views ---------------- */
+function langSwitch(){ return `<div class="lang"><button data-act="lang" data-v="en" class="${S.lang==='en'?'on':''}">EN</button><button data-act="lang" data-v="ta" class="${S.lang==='ta'?'on':''}">தமிழ்</button></div>`; }
+function shell(inner){
+  const admin=S.user.role==='Admin';
+  return `<div class="top">
+    <div class="brand"><img src="${mainLogo()}" alt=""><span>${esc(cfg.company)}</span></div>
+    <div class="nav"><button data-act="nav" data-v="dash" class="${S.view==='dash'?'on':''}">${T('dash')}</button>
+      <button data-act="nav" data-v="check" class="${S.view==='check'?'on':''}">${T('check')}</button>
+      ${admin?`<button data-act="nav" data-v="settings" class="${S.view==='settings'?'on':''}">⚙ ${T('settings')}</button>`:''}</div>
+    <div class="sp"></div>
+    ${admin?`<select id="storeSel" title="${T('store')}">${cfg.stores.map(s=>`<option value="${esc(s.id)}" ${s.id===S.store?'selected':''}>${esc(s.id)} · ${esc(s.name)}</option>`).join('')}</select>`:`<span class="who">${esc(S.store)}</span>`}
+    <span class="dot" id="syncDot"></span>${langSwitch()}
+    <span class="who">${esc(S.user.name)}</span><button class="ghost" data-act="logout">${T('logout')}</button>
+  </div><main>${inner}</main>`;
+}
+function loginView(){
+  return `<div class="login"><div style="text-align:right">${langSwitch()}</div>
+    <img class="lg" src="${mainLogo()}" alt="">
+    <h1>${esc(cfg.company)}</h1><p>${esc(cfg.appTitle)}</p>
+    <div class="f"><label>${T('user')}</label><input id="lu" autocomplete="username" autocapitalize="off">
+    <label>${T('pin')}</label><input id="lp" type="password" inputmode="numeric" autocomplete="current-password"></div>
+    <button class="btn" data-act="login">${T('signin')}</button><div class="err">${esc(S.loginErr)}</div>
+    ${cfg.showLogo2?`<img class="lg2" src="${secLogo()}" alt="">`:''}
+    ${API_URL()?'':`<div class="hint">${T('demoMode')}<br>staff1 / 1234 &nbsp;·&nbsp; manager / 9999</div>`}</div>`;
+}
+function dashView(){
+  const {secs,tot,fails,dates}=agg(S.from,S.to,S.store);
+  const t=todayISO(), y=addDays(t,-1);
+  const chip=(k,a,b)=>`<button class="chip-btn ${S.from===a&&S.to===b?'on':''}" data-act="chip" data-a="${a}" data-b="${b}">${T(k)}</button>`;
+  const single=S.from===S.to, label=single?fmtD(S.from):`${fmtD(S.from)} - ${fmtD(S.to)}`;
+  const answered=tot.yes+tot.no, pct=tot.total?Math.round(tot.yes/tot.total*100):0;
+  let hero;
+  if(answered===0) hero=`<div class="hero bad"><div class="orb"></div><div><h2>${T('noData')} ${label}</h2><p>${tot.pend} ${T('notSub')}</p></div></div>`;
+  else if(tot.no>0) hero=`<div class="hero warn"><div class="orb"></div><div><h2>${pct}% ${T('passed')} · ${label}</h2><p>${tot.no} ${T('attention')}${tot.pend?` · ${tot.pend} ${T('pending').toLowerCase()}`:''}</p></div></div>`;
+  else hero=`<div class="hero ok"><div class="orb"></div><div><h2>${T('onTrack')} · ${pct}% ${T('passed')}</h2><p>${label}${tot.pend?` · ${tot.pend} ${T('pending').toLowerCase()}`:''}</p></div></div>`;
+  const kpi=(n,l,c)=>`<div class="kpi"><b style="color:${c}">${n}</b><span>${T(l)}</span></div>`;
+  const rows=secs.map(s=>`<div class="srow"><div class="num">${s.c}</div>
+      <div><div class="sname"><span>${esc(L(s))}</span>${s.pend?`<small>${s.pend} ${T('noPending').toLowerCase()}</small>`:''}</div>
+      <div class="bar"><i class="y" style="width:${s.total?s.yes/s.total*100:0}%"></i><i class="n" style="width:${s.total?s.no/s.total*100:0}%"></i></div></div>
+      <div class="score">${s.yes}/${s.total}<small>${s.total?Math.round(s.yes/s.total*100):0}%</small></div></div>`).join('');
+  const fl=fails.length?fails.map(f=>{const sec=secByCode(f.t.s);
+    return `<div class="fail"><div class="fh"><span class="chip">${sec.c} · ${esc(L(sec))}</span><span class="meta">${dates.length>1?fmtD(f.d)+' · ':''}${esc(f.r.by||'')} · ${fmtDT(f.r.at)}</span></div>
+      <div>${esc(L(f.t))}</div><div class="fr"><b>${T('rem')}:</b> ${esc(f.r.r)}</div></div>`}).join(''):`<div class="empty">${T('noFail')}</div>`;
+  return `<div class="filters"><input type="date" id="fFrom" value="${S.from}" max="${t}"><span class="meta">${T('to')}</span><input type="date" id="fTo" value="${S.to}" max="${t}">
+      <button class="btn" data-act="go">${T('go')}</button><div class="sp"></div>${chip('yday',y,y)}${chip('today',t,t)}${chip('d7',addDays(t,-6),t)}${chip('d30',addDays(t,-29),t)}</div>${hero}
+    <div class="kpis">${kpi(tot.total,'total','var(--navy)')}${kpi(tot.yes,'done','#1e8a3c')}${kpi(tot.no,'failed','#c0392b')}${kpi(tot.pend,'pending','#d97706')}</div>
+    ${single&&answered?`<div style="text-align:right;margin-bottom:-6px"><button class="btn gold" data-act="pdf" data-d="${S.from}">⬇ ${T('pdf')}${tot.pend?` (${T('partial')})`:''}</button></div>`:''}
+    <div class="h">${T('secScore')}</div><div class="card">${rows}</div>
+    <div class="h">${T('failedPts')} <span class="cnt">${fails.length}</span></div><div class="card">${fl}</div>`;
+}
+function taskCard(t,locked){
+  const r=getR(t.id)||{}, showRem=r.a==='N'||r.r||S.openRem[t.id], needs=r.a==='N'&&!(r.r||'').trim();
+  return `<div class="task" data-card="${t.id}">
+    <div class="tq">${esc(L(t))}${t.m?`<span class="badge">${T('mand')}</span>`:''}</div>
+    <div class="yn"><button class="yes ${r.a==='Y'?'on':''}" data-act="ans" data-id="${t.id}" data-v="Y" ${locked?'disabled':''}>✓ ${T('yes')}</button>
+      <button class="no ${r.a==='N'?'on':''}" data-act="ans" data-id="${t.id}" data-v="N" ${locked?'disabled':''}>✗ ${T('no')}</button></div>
+    ${showRem?`<textarea class="rem ${needs?'req':''}" data-rem="${t.id}" rows="2" placeholder="${r.a==='N'?T('remPh'):T('remOpt')}" ${locked?'readonly':''}>${esc(r.r||'')}</textarea>`
+      :(locked||!r.a?'':`<button class="addrem" data-act="addrem" data-id="${t.id}">${T('addRem')}</button>`)}
+    ${r.at?`<div class="tmeta">${esc(r.by||'')} · ${fmtDT(r.at)}</div>`:''}</div>`;
+}
+function checkView(){
+  const all=TASKS.length, doneN=TASKS.filter(t=>complete(getR(t.id))).length, allSub=SECS.every(s=>isSub(s.c));
+  const inTab=(t,tab)=>S.keep[t.id]?tab==='completed':(complete(getR(t.id))?'completed':'pending')===tab;
+  let blocks='';
+  SECS.forEach(s=>{
+    const ts=tasksIn(s.c), subd=isSub(s.c), mine=ts.filter(t=>inTab(t,S.tab)), secDone=reqDone(s.c);
+    const ready=S.tab==='pending'&&secDone&&!subd;
+    if(!mine.length&&!ready) return;
+    const col=S.collapsed[s.c];
+    const subInfo=subd?`<span class="pill g">✓ ${T('submitted')} · ${fmtDT(S.sub[sk(s.c)].at)}</span>`:`<span class="pill">${mine.length} ${T('tasks')}</span>`;
+    const left=ts.filter(t=>t.m&&!complete(getR(t.id))).length;
+    const footer=!subd&&(S.tab==='completed'||ready)?`<div class="sub"><span>${secDone?T('secReady'):`${left} ${T('left')}`}</span>
+        <button class="btn" data-act="submit" data-c="${s.c}" ${secDone?'':'disabled'}>${T('submitSec')}</button></div>`:'';
+    blocks+=`<div class="sec"><div class="sech" data-act="toggle" data-c="${s.c}"><div class="num">${s.c}</div><div class="t">${esc(L(s))}</div>${subInfo}<span>${col?'▼':'▲'}</span></div>
+      ${col?'':`<div class="secb">${mine.map(t=>taskCard(t,subd)).join('')}</div>${footer}`}</div>`;
+  });
+  if(!blocks) blocks=`<div class="card empty">${T('nothing')}</div>`;
+  return `<div class="filters"><span class="meta">${T('date')}</span><input type="date" id="cDate" value="${S.cdate}" max="${todayISO()}"><span class="meta">${T('store')}: <b>${esc(S.store)}</b></span></div>
+    ${allSub?`<div class="banner"><span>✓ ${T('allSub')}</span><button class="btn gold" data-act="pdf" data-d="${S.cdate}">⬇ ${T('pdf')}</button></div>`:''}
+    <div class="prog"><div class="row"><span>${T('progress')}</span><span id="progTxt">${doneN} / ${all}</span></div><div class="pbar"><i id="progFill" style="width:${doneN/all*100}%"></i></div></div>
+    <div class="tabs"><button data-act="tab" data-v="pending" class="${S.tab==='pending'?'on':''}">⏱ ${T('pTab')}<span class="c" id="cntP">${all-doneN}</span></button>
+      <button data-act="tab" data-v="completed" class="${S.tab==='completed'?'on':''}">✓ ${T('cTab')}<span class="c" id="cntC">${doneN}</span></button></div>${blocks}`;
+}
+function updateHead(){
+  const all=TASKS.length, d=TASKS.filter(t=>complete(getR(t.id))).length, a=$('#progTxt'); if(!a) return;
+  a.textContent=`${d} / ${all}`; $('#progFill').style.width=(d/all*100)+'%'; $('#cntP').textContent=all-d; $('#cntC').textContent=d;
+}
+
+/* ---------------- Settings (admin) ---------------- */
+function settingsView(){
+  const d=S.setDraft, F=(label,key,val,extra='')=>`<div class="fld"><label>${label}</label><input data-cf="${key}" value="${esc(val)}" ${extra}></div>`;
+  const logo=(label,key,src,reset)=>`<div class="fld"><label>${label}</label><div class="logoBox"><img src="${src}" alt=""><div>
+      <div class="acts"><label class="btn out sm">${T('upload')}<input type="file" accept="image/*" data-logo="${key}" hidden></label><button class="ghost" data-act="logoReset" data-k="${key}">${T('reset')}</button></div></div></div></div>`;
+  const sw=['#5c0f0f','#1d2b5b','#14532d','#7c2d12','#1f2433'].map(c=>`<button data-act="preset" data-c="${c}" style="background:${c}" title="${c}"></button>`).join('');
+  return `<div class="h">⚙ ${T('settings')}</div><div class="meta" style="margin:-4px 0 10px">${T('cfgHint')}</div>
+  <div class="card pad"><b style="color:var(--navy)">${T('basics')}</b>
+    ${F(T('company'),'company',d.company)}
+    <div class="grid2">${F(T('appTitle'),'appTitle',d.appTitle)}${F(T('formCode'),'formCode',d.formCode)}</div>
+    <div class="grid2">${logo(T('logoMain'),'logoMain',d.logoMain||DEFAULT_LOGO_MAIN)}${logo(T('logo2'),'logoSecond',d.logoSecond||DEFAULT_LOGO_2)}</div>
+    <div class="fld"><label><input type="checkbox" data-cf="showLogo2" ${d.showLogo2?'checked':''} style="width:auto;margin-right:6px">${T('showLogo2')}</label></div>
+    <div class="grid2"><div class="fld"><label>${T('brand')}</label><input type="color" data-cf="color" value="${esc(d.color)}" style="height:42px;padding:3px"><div class="sw">${sw}</div></div>
+      <div class="fld"><label>${T('defLang')}</label><select data-cf="defaultLang"><option value="en" ${d.defaultLang==='en'?'selected':''}>English</option><option value="ta" ${d.defaultLang==='ta'?'selected':''}>தமிழ்</option></select></div></div>
+    <div class="fld"><label>${T('pdfNote')}</label><textarea data-cf="pdfFooter" rows="2">${esc(d.pdfFooter)}</textarea></div></div>
+  <div class="card pad" style="margin-top:12px"><b style="color:var(--navy)">${T('stores')}</b>
+    ${d.stores.map((s,i)=>`<div class="srow2"><input data-st="${i}" data-sf="id" value="${esc(s.id)}" placeholder="${T('storeId')}"><input data-st="${i}" data-sf="name" value="${esc(s.name)}" placeholder="${T('storeName')}"><button data-act="delStore" data-i="${i}">✕</button></div>`).join('')}
+    <div class="meta" style="margin-top:6px">${T('idHint')}</div>
+    <button class="btn out sm" style="margin-top:8px" data-act="addStore">${T('addStore')}</button></div>
+  <div class="card pad" style="margin-top:12px"><b style="color:var(--navy)">${T('conn')}</b>
+    ${F(T('apiUrl'),'apiUrl',d.apiUrl,`placeholder="${esc(BAKED_API_URL||'https://svv-checklist-api.yourname.workers.dev')}"`)}
+    <div class="acts" style="display:flex;gap:8px;align-items:center;margin-top:8px"><button class="btn out sm" data-act="testConn">${T('test')}</button><span class="meta" id="connRes">${API_URL()?'':T('demoMode')}</span></div></div>
+  <div class="stick"><button class="btn" data-act="saveCfg">${T('saveCfg')}</button>
+    <button class="btn out" data-act="expCfg">${T('exp')}</button><label class="btn out">${T('imp')}<input type="file" accept=".json" id="impCfg" hidden></label>
+    <button class="ghost" data-act="resetCfg" style="color:var(--red)">${T('resetAll')}</button></div>`;
+}
+function readLogo(file,key){
+  const fr=new FileReader();
+  fr.onload=()=>{ const img=new Image(); img.onload=()=>{
+    const mx=260, sc=Math.min(1,mx/Math.max(img.width,img.height)), w=Math.round(img.width*sc), h=Math.round(img.height*sc);
+    const mk=bg=>{ const cv=document.createElement('canvas'); cv.width=w; cv.height=h; const g=cv.getContext('2d'); if(bg){g.fillStyle='#fff';g.fillRect(0,0,w,h);} g.drawImage(img,0,0,w,h); return cv; };
+    let url=mk(false).toDataURL('image/png'); if(url.length>45000) url=mk(true).toDataURL('image/jpeg',.85);
+    if(url.length>45000){ toast(T('logoBig')); return; }
+    S.setDraft[key]=url; render();
+  }; img.src=fr.result; };
+  fr.readAsDataURL(file);
+}
+async function saveCfg(){
+  const d=S.setDraft;
+  d.company=(d.company||'').trim()||DEFAULTS.company; d.appTitle=(d.appTitle||'').trim()||DEFAULTS.appTitle; d.formCode=(d.formCode||'').trim();
+  const seen={}; d.stores=d.stores.map(s=>({id:(s.id||'').trim(),name:(s.name||'').trim()})).filter(s=>s.id&&!seen[s.id]&&(seen[s.id]=1));
+  if(!d.stores.length) d.stores=DEFAULTS.stores;
+  cfg={...d}; store.set('svv_cfg',cfg);
+  if(!cfg.stores.some(s=>s.id===S.store)){ S.store=cfg.stores[0].id; store.set('svv_store',S.store); }
+  applyTheme(); toast(T('saved')); S.setDraft=JSON.parse(JSON.stringify(cfg)); render();
+  if(API_URL()){ const {apiUrl,stores,...rest}=cfg; await api('config',{config:rest,stores}); }
+}
+async function testConn(){
+  const u=((S.setDraft&&S.setDraft.apiUrl)||API_URL()).trim(), out=$('#connRes'); if(!u){ out.textContent=T('demoMode'); return; }
+  out.textContent='...'; const t0=Date.now();
+  try{ const j=await (await fetch(u+'?action=ping')).json(); out.textContent=j.ok?`✓ ${T('connOk')} (${Date.now()-t0} ms)`:'✗ '+T('connFail'); }
+  catch(e){ out.textContent='✗ '+T('connFail'); }
+}
+
+function render(){
+  const y=window.scrollY;
+  document.documentElement.lang=S.lang==='ta'?'ta':'en';
+  let inner='';
+  if(S.user){ inner=shell(S.view==='dash'?dashView():S.view==='settings'&&S.user.role==='Admin'?settingsView():checkView()); } else inner=loginView();
+  $('#app').innerHTML=inner; setSync(API_URL()?'':''); window.scrollTo(0,y);
+}
+
+/* ---------------- PDF (DER style) ---------------- */
+function donut(yes,no,pend){
+  const tot=(yes+no+pend)||1, C=2*Math.PI*40; let off=0;
+  const seg=(n,col)=>{const len=n/tot*C; const s=`<circle r="40" cx="50" cy="50" fill="none" stroke="${col}" stroke-width="14" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}" transform="rotate(-90 50 50)"/>`; off+=len; return s;};
+  return `<svg viewBox="0 0 100 100" width="130" height="130"><circle r="40" cx="50" cy="50" fill="none" stroke="#ece6d6" stroke-width="14"/>${seg(yes,'#1e8a3c')}${seg(no,'#c0392b')}${seg(pend,'#cfc8b6')}<text x="50" y="56" text-anchor="middle" font-size="18" font-weight="700" fill="${cfg.color}" font-family="Cambria,Caladea,serif">${Math.round(yes/tot*100)}%</text></svg>`;
+}
+function reportHTML(date,st){
+  const {secs,tot,fails}=agg(date,date,st), stName=(cfg.stores.find(s=>s.id===st)||{}).name||'';
+  const firstAt=TASKS.map(t=>S.resp[rk(t.id,date,st)]).filter(Boolean).map(r=>r.at).sort()[0];
+  const lastSub=SECS.map(s=>S.sub[sk(s.c,date,st)]).filter(Boolean).map(x=>x.at).sort().pop();
+  const secRows=secs.map(s=>{const sb=S.sub[sk(s.c,date,st)];
+    return `<div class="rp-sec"><div class="n">${s.c}</div><div><b>${esc(L(s))}</b></div>
+      <div class="rp-bar"><i style="width:${s.total?s.yes/s.total*100:0}%;background:#1e8a3c"></i><i style="width:${s.total?s.no/s.total*100:0}%;background:#c0392b"></i></div>
+      <div style="text-align:right"><b>${s.yes}/${s.total}</b></div><div style="font-size:9px;color:#6b7280">${sb?'✓ '+fmtDT(sb.at):T('draft')}</div></div>`}).join('');
+  const failBox=fails.length?fails.map(f=>{const sec=secByCode(f.t.s);
+    return `<div class="rp-fail"><div style="color:var(--navy);font-weight:700;font-size:10.5px">${sec.c} · ${esc(L(sec))} &nbsp;|&nbsp; <span style="font-weight:400;color:#6b7280">${esc(f.r.by||'')} · ${fmtDT(f.r.at)}</span></div>
+      <div style="margin:3px 0">${esc(L(f.t))}</div><div><b style="color:#c0392b">${T('rem')}:</b> ${esc(f.r.r)}</div></div>`}).join(''):`<div style="margin:0 22px;color:#1e8a3c;font-weight:700">✓ ${T('noFailTxt')}</div>`;
+  let log='';
+  SECS.forEach(s=>{ log+=`<tr class="sh"><td colspan="5">${s.c} · ${esc(L(s))}</td></tr>`;
+    tasksIn(s.c).forEach(t=>{const r=S.resp[rk(t.id,date,st)];
+      log+=`<tr><td>${t.id}</td><td>${esc(L(t))}</td><td class="${r?(r.a==='Y'?'ok':'no'):'pe'}">${r?(r.a==='Y'?T('yes'):T('no')):'-'}</td><td>${esc(r&&r.r||'')}</td><td style="white-space:nowrap">${r?fmtDT(r.at):''}</td></tr>`;}); });
+  return `<div class="rp"><div class="rp-code">${esc(cfg.formCode)}</div>
+    <div class="rp-head"><div class="l2">${cfg.showLogo2?`<img src="${secLogo()}" alt="">`:''}</div>
+      <div class="mid"><h1>${esc(cfg.company)}</h1><div>${T('rpTitle')} · ${esc(cfg.appTitle)}</div></div><div class="l1"><img src="${mainLogo()}" alt=""></div></div>
+    <div class="rp-meta"><div><small>${T('date')}</small><b>${fmtD(date)} ${date.slice(0,4)}</b></div><div><small>${T('store')}</small><b>${esc(st)} ${esc(stName)}</b></div>
+      <div><small>${T('rpBy')}</small><b>${esc(S.user.name)}</b></div><div><small>${T('time')}</small><b>${fmtDT(firstAt)||'-'}${lastSub?' → '+fmtDT(lastSub):''}</b></div></div>
+    <div class="rp-sum">${donut(tot.yes,tot.no,tot.pend)}<div class="rp-leg"><div style="font-size:11px;color:#6b7280">${T('rpOverall')}</div><div style="font-size:23px;font-weight:700;color:var(--navy)">${tot.yes}/${tot.total}</div>
+      <div><i style="background:#1e8a3c"></i>${T('done')}: <b>${tot.yes}</b></div><div><i style="background:#c0392b"></i>${T('failed')}: <b>${tot.no}</b></div><div><i style="background:#cfc8b6"></i>${T('pending')}: <b>${tot.pend}</b></div></div></div>
+    <h3>${T('rpSec')}</h3>${secRows}<h3>${T('rpFail')} (${fails.length})</h3>${failBox}<h3>${T('rpLog')}</h3>
+    <table><thead><tr><th style="width:24px">#</th><th>${T('pt')}</th><th style="width:44px">${T('ans')}</th><th style="width:130px">${T('rem')}</th><th style="width:78px">${T('time')}</th></tr></thead><tbody>${log}</tbody></table>
+    <div class="rp-sign"><div>${T('rpMgr')}</div><div>${T('rpAud')}</div></div>
+    <div class="rp-foot"><span>${T('rpGen')}: ${fmtDT(nowISO())} (IST)${cfg.pdfFooter?' · '+esc(cfg.pdfFooter):''}</span><span>${esc(cfg.formCode)}</span></div></div>`;
+}
+async function downloadPDF(date){
+  const area=$('#printArea'); area.innerHTML=reportHTML(date,S.store); toast('...');
+  try{ await document.fonts.ready; }catch(e){}
+  const name=`DER_${S.store}_${date}.pdf`;
+  if(window.html2pdf){
+    await html2pdf().set({margin:[6,0,8,0],filename:name,image:{type:'jpeg',quality:.98},html2canvas:{scale:2,useCORS:true,windowWidth:794},
+      jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},pagebreak:{mode:['css','legacy'],avoid:['tr','.rp-fail','.rp-sec']}}).from(area.firstElementChild).save();
+    area.innerHTML='';
+  } else { document.body.classList.add('printing'); window.print(); }
+}
+window.addEventListener('afterprint',()=>{document.body.classList.remove('printing');$('#printArea').innerHTML='';});
+
+/* ---------------- events ---------------- */
+document.addEventListener('click',async e=>{
+  const el=e.target.closest('[data-act]'); if(!el) return; const a=el.dataset.act;
+  if(a==='login') return doLogin();
+  if(a==='lang'){ S.lang=el.dataset.v; store.set('svv_lang',S.lang); return render(); }
+  if(a==='logout') return logout();
+  if(a==='nav'){ S.view=el.dataset.v; S.keep={}; if(S.view==='settings') S.setDraft=JSON.parse(JSON.stringify(cfg)); if(S.view==='dash') await pull(S.from,S.to,S.store); return render(); }
+  if(a==='chip'){ S.from=el.dataset.a; S.to=el.dataset.b; await pull(S.from,S.to,S.store); return render(); }
+  if(a==='go'){ let f=$('#fFrom').value||S.from, t=$('#fTo').value||S.to; if(f>t)[f,t]=[t,f]; S.from=f; S.to=t; await pull(f,t,S.store); return render(); }
+  if(a==='tab'){ S.tab=el.dataset.v; S.keep={}; return render(); }
+  if(a==='toggle'){ const c=el.dataset.c; S.collapsed[c]=!S.collapsed[c]; return render(); }
+  if(a==='ans') return answer(+el.dataset.id,el.dataset.v);
+  if(a==='addrem'){ S.openRem[el.dataset.id]=true; render(); const ta=document.querySelector(`[data-rem="${el.dataset.id}"]`); if(ta) ta.focus(); return; }
+  if(a==='submit') return submitSection(+el.dataset.c);
+  if(a==='pdf') return downloadPDF(el.dataset.d);
+  if(a==='logoReset'){ S.setDraft[el.dataset.k]=''; return render(); }
+  if(a==='preset'){ S.setDraft.color=el.dataset.c; return render(); }
+  if(a==='addStore'){ S.setDraft.stores.push({id:'SVV-0'+(S.setDraft.stores.length+1),name:''}); return render(); }
+  if(a==='delStore'){ S.setDraft.stores.splice(+el.dataset.i,1); return render(); }
+  if(a==='saveCfg') return saveCfg();
+  if(a==='testConn') return testConn();
+  if(a==='expCfg'){ const b=new Blob([JSON.stringify(S.setDraft,null,2)],{type:'application/json'}), u=URL.createObjectURL(b), l=document.createElement('a'); l.href=u; l.download='svv-settings.json'; l.click(); return URL.revokeObjectURL(u); }
+  if(a==='resetCfg'){ if(confirm(T('confirmReset'))){ S.setDraft=JSON.parse(JSON.stringify({...DEFAULTS,apiUrl:cfg.apiUrl})); render(); } return; }
+});
+document.addEventListener('input',e=>{
+  const t=e.target, ds=t.dataset||{};
+  if(ds.rem){ const k=rk(+ds.rem), cur=S.resp[k]||{}; S.resp[k]={...cur,r:t.value,by:S.user.u,at:nowISO()};
+    t.classList.toggle('req',cur.a==='N'&&!t.value.trim()); persist(); markDirty(+ds.rem); updateHead(); return; }
+  if(S.setDraft){
+    if(ds.cf) S.setDraft[ds.cf]=t.type==='checkbox'?t.checked:t.value;
+    if(ds.st!==undefined) S.setDraft.stores[+ds.st][ds.sf]=t.value;
+  }
+});
+document.addEventListener('change',async e=>{
+  const t=e.target, ds=t.dataset||{};
+  if(t.id==='storeSel'){ S.store=t.value; store.set('svv_store',S.store); await pull(S.from,S.to,S.store); render(); }
+  if(t.id==='cDate'){ S.cdate=t.value||todayISO(); S.keep={}; await pull(S.cdate,S.cdate,S.store); render(); }
+  if(ds.logo&&t.files[0]) readLogo(t.files[0],ds.logo);
+  if(ds.cf==='color'&&S.setDraft){ S.setDraft.color=t.value; render(); }
+  if(t.id==='impCfg'&&t.files[0]){ const fr=new FileReader(); fr.onload=()=>{ try{ const j=JSON.parse(fr.result); S.setDraft={...S.setDraft,...j,apiUrl:S.setDraft.apiUrl}; render(); }catch(x){ toast('Invalid file'); } }; fr.readAsText(t.files[0]); }
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!S.user&&(e.target.id==='lu'||e.target.id==='lp')) doLogin(); });
+
+/* ---------------- boot ---------------- */
+(function init(){
+  applyTheme();
+  if(S.user){ S.store=S.user.store!=='ALL'?S.user.store:(S.store&&cfg.stores.some(s=>s.id===S.store)?S.store:cfg.stores[0].id); }
+  S.cdate=todayISO(); S.from=S.to=todayISO();
+  render(); loadRemote(); flush();
+})();
+</script>
+</body>
+</html>
