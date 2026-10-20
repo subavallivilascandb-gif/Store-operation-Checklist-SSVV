@@ -357,8 +357,18 @@ async function loadRemote(){
 async function doLogin(){
   const u=$('#lu').value.trim().toLowerCase(), p=$('#lp').value.trim();
   let user=null;
-  if(API_URL()){ const j=await api('login',{u,p}); if(j&&j.ok&&j.user) user={...j.user,token:j.token}; }
-  else user=DEMO_USERS.find(x=>x.u===u&&x.p===p)||null;
+  if(API_URL()){
+    const j=await api('login',{u,p});
+    if(j&&j.ok&&j.user){
+      user={...j.user,token:j.token};
+    } else {
+      S.loginErr = j ? (j.err || T('bad')) : 'Cannot connect to Worker URL. Check network / Worker settings.';
+      render();
+      return;
+    }
+  } else {
+    user=DEMO_USERS.find(x=>x.u===u&&x.p===p)||null;
+  }
   if(!user){ S.loginErr=T('bad'); render(); return; }
   S.user={u:user.u,name:user.name,role:user.role,store:user.store,token:user.token||''}; store.set('svv_user',S.user);
   S.store=user.store==='ALL'?(store.get('svv_store',null)||cfg.stores[0].id):user.store;
